@@ -1,0 +1,15 @@
+{
+  "address": "0xfCA2390Fc69992468766dB32dFaB50E8279a2AeF",
+  "chainId": 137,
+  "fullyQualifiedName": "IceGirlz.sol:IceGirlz",
+  "compilerVersion": "0.8.24+commit.e11b9ed9",
+  "settings": {
+    "optimizer": {
+      "runs": 200,
+      "enabled": false
+    },
+    "evmVersion": "shanghai"
+  },
+  "deployTx": "0x0add7e687db93fdfb2ebe46dc4a2837aa63959feb52d1bf490eeab1f2c5cb0d3",
+  "source": "https://sourcify.dev"
+}

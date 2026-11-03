@@ -1,0 +1,15 @@
+{
+  "address": "0xd49D198f6d448458C1eEc01954a38Fc2165E30cF",
+  "chainId": 137,
+  "fullyQualifiedName": "contracts/ice-raffles.sol:IceRaffle",
+  "compilerVersion": "0.8.24+commit.e11b9ed9",
+  "settings": {
+    "optimizer": {
+      "runs": 200,
+      "enabled": false
+    },
+    "evmVersion": "cancun"
+  },
+  "deployTx": "0x82919c6d5662dc89e6ace48184ea7d93286bb6cbdb116f595b02cc3639a6decc",
+  "source": "https://sourcify.dev"
+}
