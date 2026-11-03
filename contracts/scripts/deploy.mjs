@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const AMOY_CHAIN_ID = 80002n;
 
-const rpcUrl = process.env.AMOY_RPC_URL || "https://rpc-amoy.polygon.technology";
+const rpcUrl = process.env.AMOY_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com";
 if (!process.env.DEPLOYER_PRIVATE_KEY) throw new Error("Set DEPLOYER_PRIVATE_KEY in contracts/.env");
 
 const provider = new ethers.JsonRpcProvider(rpcUrl);
@@ -31,6 +31,8 @@ const NFTS_PER_WALLET = Number(process.env.NFTS_PER_WALLET || 3);
 const FROST_PER_WALLET = ethers.parseEther(process.env.FROST_PER_WALLET || "1000");
 
 console.log(`Deployer ${deployer.address}, balance ${ethers.formatEther(await provider.getBalance(deployer.address))} POL`);
+
+const ICE_GIRLZ_BASE_URI = "ipfs://bafybeif6e7qb4hzlv7mivtrr2bc5gtcz7gfbetipi2szmfhat3q2rnnxqq/";
 
 const artifact = (name) => JSON.parse(fs.readFileSync(path.join(root, "out", `${name}.json`), "utf8"));
 
@@ -60,6 +62,8 @@ await send("staking: Ice Girlz = id 1, 10 FROST/day", staking.setContract(1, awa
 await send("staking: Ice Folks = id 2, 15 FROST/day", staking.setContract(2, await iceFolks.getAddress(), ethers.parseEther("15")));
 await send("frost: staking contract can mint", frost.addMinter(await staking.getAddress()));
 await send("raffles: fund receiver = deployer", raffles.setFundReceiver(deployer.address));
+// Mainnet owner updated baseURI after deploy; use the current production metadata.
+await send("iceGirlz: baseURI = current mainnet metadata", iceGirlz.setBaseURI(ICE_GIRLZ_BASE_URI));
 await send("iceGirlz: unpause public mint", iceGirlz.unpause());
 await send("iceGirlz: mint cost 0.01 POL (testnet)", iceGirlz.setCost(ethers.parseEther("0.01")));
 
