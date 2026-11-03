@@ -7,7 +7,7 @@ import Button from "@/components/UI/items/button";
 import Navbar from "@/components/UI/navbar";
 import { setERC721Contract } from "@/utils/handlers/contractSetup";
 import { getAllRaffles, getEndedRaffles, yourTickets } from "@/utils/handlers/getAllRaffles";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount } from "wagmi";
 
@@ -24,7 +24,12 @@ export default function Home() {
 
     const [selected, setSelected] = useState<string>("past");
 
+    // Only the latest request may update state: an earlier anonymous fetch (before the
+    // wallet reconnected) must not overwrite the caller-specific "tickets you own".
+    const rafflesRequest = useRef(0);
+
     async function fetchRaffles() {
+        const requestId = ++rafflesRequest.current;
         try {
             setLoading(true);
             const raffles = await getAllRaffles();
@@ -36,7 +41,7 @@ export default function Home() {
             })
 
             await Promise.all(res).then((values) => {
-                console.log(values);
+                if (requestId !== rafflesRequest.current) return;
                 setActive(values);
             }).catch((err) => {
                 console.log(err);
