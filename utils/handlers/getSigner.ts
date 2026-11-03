@@ -1,4 +1,4 @@
-import { getAccount, getConnectorClient } from "wagmi/actions";
+import { getAccount, getConnectorClient, watchAccount } from "wagmi/actions";
 import { ethers } from "ethers";
 import type { Account, Chain, Client, Transport } from "viem";
 import { getRpcUrlOrUndefined, networkConfig } from "@/utils/config";
@@ -25,8 +25,24 @@ export function getReadProvider() {
  * Throws if the wallet is on another chain, so transactions never go to the wrong network.
  * When no wallet is connected, returns a read-only provider (writes will fail).
  */
+// On page load wagmi restores the previous connection asynchronously. Wait for it, so
+// calls that depend on msg.sender (e.g. raffles "tickets you own") don't run as anonymous.
+async function settledAccount() {
+  const pending = (s: string) => s === "reconnecting" || s === "connecting";
+  if (!pending(getAccount(wagmiConfig).status)) return getAccount(wagmiConfig);
+  await new Promise<void>((resolve) => {
+    const timer = setTimeout(() => { unwatch(); resolve(); }, 5000);
+    const unwatch = watchAccount(wagmiConfig, {
+      onChange(account) {
+        if (!pending(account.status)) { clearTimeout(timer); unwatch(); resolve(); }
+      },
+    });
+  });
+  return getAccount(wagmiConfig);
+}
+
 export async function getSignerOrProvider(): Promise<ethers.Signer | ethers.providers.Provider> {
-  if (getAccount(wagmiConfig).status !== "connected") return getReadProvider();
+  if ((await settledAccount()).status !== "connected") return getReadProvider();
   const client = await getConnectorClient(wagmiConfig, { chainId: activeChain.id });
   return clientToSigner(client);
 }

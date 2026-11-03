@@ -117,10 +117,11 @@ export default function Home() {
 
 
 
+    // Re-fetch when the account changes: "tickets you own" depends on the caller.
     useEffect(() => {
         fetchRaffles();
         endedRaffles()
-    }, [])
+    }, [address])
 
 
     return (
