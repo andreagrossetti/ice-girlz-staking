@@ -9,6 +9,8 @@ import React, { useEffect } from 'react'
 import { RiLoader5Fill } from 'react-icons/ri';
 import { AdminRaffleCards } from './adminRaffleCards';
 import { toast } from 'react-toastify';
+import { raffleImageName } from '@/utils/config';
+import { signAdminAction } from '@/utils/handlers/signAdminAction';
 
 export const RaffleSettings = () => {
 
@@ -86,10 +88,13 @@ export const RaffleSettings = () => {
             const approve = await approval(contractAdd);
 
             if (approve) {
+                const { timestamp, signature } = await signAdminAction('upload-raffle-image', raffleImageName(contractAdd, tokenId));
                 const formData = new FormData();
                 formData.append('profileImage', profileImg as Blob);
                 formData.append('ca', contractAdd);
                 formData.append('tokenId', tokenId);
+                formData.append('timestamp', String(timestamp));
+                formData.append('signature', signature);
                 const response = await axios.post('/api/uploadToS3', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'

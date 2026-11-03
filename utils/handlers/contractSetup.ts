@@ -6,22 +6,15 @@ import { ethers } from "ethers";
 import stakingAbi from "@/utils/abis/staking";
 import raffleAbi from "@/utils/abis/raffles";
 import erc721abi from "../abis/erc721abi";
+import { getReadProvider, getSignerOrProvider } from "./getSigner";
 
 const add = [contractAdds.frost, contractAdds.iceGirlz, contractAdds.iceFolks, contractAdds.staking, contractAdds.raffles];
 const abi = [frostAbi, IGabi, IFabi, stakingAbi, raffleAbi];
 
+// Contract bound to the connected wallet (writes) or to a read-only provider when not connected.
 export async function contractSetup(index: number) {
   try {
-    // @ts-ignore
-    if (typeof window.ethereum !== 'undefined') {
-      //@ts-ignore
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-
-      const contract = new ethers.Contract(add[index], abi[index], signer);
-
-      return contract;
-    }
+    return new ethers.Contract(add[index], abi[index], await getSignerOrProvider());
   }
   catch (err) {
     console.log(err);
@@ -29,35 +22,17 @@ export async function contractSetup(index: number) {
 }
 
 export async function setERC721Contract(address: string) {
-  try{
- // @ts-ignore
- if (typeof window.ethereum !== 'undefined') {
- // @ts-ignore
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-
-      const contract = new ethers.Contract(address, erc721abi, signer);
-      return contract
- }
+  try {
+    return new ethers.Contract(address, erc721abi, await getSignerOrProvider());
   }
-  catch(err){
+  catch (err) {
     console.log(err);
   }
 }
 
 export async function fetcherContractSetup(index: number) {
   try {
-    const apiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY;
-
-    if (!apiKey) {
-      console.error("Infura API key not found");
-      return null;
-    }
-
-    // Create a proper provider with the Polygon network and Infura
-    const provider = new ethers.providers.JsonRpcProvider(
-      `https://polygon-mainnet.infura.io/v3/${apiKey}`
-    );
+    const provider = getReadProvider();
 
     const contract = new ethers.Contract(add[index], abi[index], provider);
     return contract;

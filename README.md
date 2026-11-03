@@ -54,10 +54,8 @@ The dApp interacts with the following smart contracts:
    yarn install
    ```
 
-3. Create a `.env.local` file with the following variables:
-   ```
-   NEXT_PUBLIC_INFURA_API_KEY=your_infura_key
-   ```
+3. Copy `.env.example` to `.env.local` and fill in the values (Infura key or RPC URL, S3 credentials).
+   Contract addresses default to the Polygon mainnet production contracts.
 
 4. Start the development server:
    ```bash
@@ -124,6 +122,20 @@ The project is configured for easy deployment on Vercel:
 3. Connect to your GitHub repository
 4. Configure environment variables
 5. Deploy
+
+### Staging
+
+The same code runs against a testnet by changing env vars only (all `NEXT_PUBLIC_*` vars are inlined at build time, so a staging deploy needs its own build — e.g. a Vercel "Preview"/staging environment):
+
+- `NEXT_PUBLIC_NETWORK=polygonAmoy`
+- `NEXT_PUBLIC_RPC_URL` (or `NEXT_PUBLIC_INFURA_API_KEY`)
+- `NEXT_PUBLIC_*_ADDRESS` for the five testnet contracts
+- a separate S3 bucket (`AWS_S3_BUCKET_NAME`, `NEXT_PUBLIC_RAFFLES_IMAGE_BASE_URL`)
+
+### Admin API
+
+`/api/uploadToS3` and `/api/deleteFromS3` require a wallet signature from the raffles contract `owner()`
+(message built in `utils/adminAuth.ts`, valid for 5 minutes, bound to action and image name).
 
 ## Contributing
 
