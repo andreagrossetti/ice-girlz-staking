@@ -6,6 +6,8 @@ import Link from 'next/link'
 import React from 'react'
 import { FaExternalLinkAlt } from 'react-icons/fa'
 import { RiLoader5Fill } from 'react-icons/ri'
+import { raffleImageName, raffleImageUrl } from '@/utils/config'
+import { signAdminAction } from '@/utils/handlers/signAdminAction'
 
 export const AdminRaffleCards = ({values}:{values:any}) => {
 
@@ -13,7 +15,9 @@ export const AdminRaffleCards = ({values}:{values:any}) => {
 
     async function deleteS3(){
         try{
-            const res = await axios.post("/api/deleteFromS3", {key: `raffles/${values.contractAdd}-${values.tokenId}`});
+            const name = raffleImageName(values.contractAddress, values.tokenId);
+            const { timestamp, signature } = await signAdminAction("delete-raffle-image", name);
+            const res = await axios.post("/api/deleteFromS3", { name, timestamp, signature });
             if(res.status == 200){
                 return true;
             }
@@ -67,7 +71,7 @@ export const AdminRaffleCards = ({values}:{values:any}) => {
   return (
     <div className='flex relative w-60 flex-col items-center rounded-xl p-1 justify-center border-2 border-icePurp border-dashed gap-4 '>
       <div className='w-52 aspect-square object-cover  p-2 rounded-xl'>
-        <Image alt='wow' height={1080} width={1080} src={`https://icegirlz.s3.ap-south-1.amazonaws.com/raffles/${values.contractAddress.toLowerCase()}-${values.tokenId}`} />
+        <Image alt='wow' height={1080} width={1080} src={raffleImageUrl(values.contractAddress, values.tokenId)} />
       </div>
       <div className='p-4'>
         <div className='flex items-center gap-4'>

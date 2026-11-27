@@ -1,0 +1,15 @@
+{
+  "address": "0x6493021A5dC68fC715B9d2dC59207c656fA3397c",
+  "chainId": 137,
+  "fullyQualifiedName": "contracts/ice-girlz-staking.sol:IceyStaking",
+  "compilerVersion": "0.8.22+commit.4fc1097e",
+  "settings": {
+    "optimizer": {
+      "runs": 200,
+      "enabled": false
+    },
+    "evmVersion": "shanghai"
+  },
+  "deployTx": "0xd472d6af5256c0742b15d3aa6a04c2f795d429f935174c48efbcb91c5afbbf88",
+  "source": "https://sourcify.dev"
+}

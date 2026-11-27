@@ -1,7 +1,9 @@
 'use client'
 import erc20abi from '@/utils/abis/erc20abi'
+import { raffleImageUrl } from '@/utils/config'
 import { contractAdds } from '@/utils/contractAdds'
 import { contractSetup } from '@/utils/handlers/contractSetup'
+import { getSigner } from '@/utils/handlers/getSigner'
 import { ethers } from 'ethers'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -42,22 +44,7 @@ export const RaffleCards = ({ values }: { values: any }) => {
   }, [values])
 
   async function setERC20() {
-    // @ts-ignore
-    if (window && window?.ethereum !== undefined) {
-      // @ts-ignore
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-      const signer = provider.getSigner();
-
-      try {
-        const contract = new ethers.Contract(contractAdds.frost, erc20abi, signer);
-
-        return contract;
-      }
-      catch (err) {
-        console.log(err);
-      }
-    }
+    return new ethers.Contract(contractAdds.frost, erc20abi, await getSigner());
   }
 
   async function approve() {
@@ -98,7 +85,7 @@ export const RaffleCards = ({ values }: { values: any }) => {
 
   return (<div className='flex max-md:flex-col gap-8'>
       <div className='h-fit border-2 border-icePurp rounded-xl w-fit max-md:mx-auto'>
-        <Image alt='wow' height={1080} width={1080} src={`https://icegirlz.s3.ap-south-1.amazonaws.com/raffles/${values.contractAddress.toLowerCase()}-${values.tokenId}`} className='object-cover md:w-[500px] max-sm:w-[350px] max-md:w-[450px] aspect-square rounded-lg' />
+        <Image alt='wow' height={1080} width={1080} src={raffleImageUrl(values.contractAddress, values.tokenId)} className='object-cover md:w-[500px] max-sm:w-[350px] max-md:w-[450px] aspect-square rounded-lg' />
       </div>
       <div className='md:p-0 max-md:py-4 w-full min-h-[300px]'>
         <div className='flex items-center max-md:justify-center gap-4'>

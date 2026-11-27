@@ -1,0 +1,15 @@
+{
+  "address": "0xa250B1a79a94689Fa81aBb20b62b74Df569A023B",
+  "chainId": 137,
+  "fullyQualifiedName": "contracts/ice-folks.sol:IceFolks",
+  "compilerVersion": "0.8.22+commit.4fc1097e",
+  "settings": {
+    "optimizer": {
+      "runs": 200,
+      "enabled": false
+    },
+    "evmVersion": "shanghai"
+  },
+  "deployTx": "0xae4c4c0d235968796aed61e69ef86dc29f90579546695ed11cc29613c84d7625",
+  "source": "https://sourcify.dev"
+}

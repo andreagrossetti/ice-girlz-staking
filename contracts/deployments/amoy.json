@@ -1,0 +1,16 @@
+{
+  "network": "polygonAmoy",
+  "chainId": 80002,
+  "deployedAt": "2026-11-03T10:17:13.179Z",
+  "deployer": "0xd740Ea6BAe2f6BB859F418D4C90FabA33B6b19c9",
+  "contracts": {
+    "frost": "0x4D315860505A7E6643519ca22459C5d9248742D4",
+    "iceGirlz": "0x50e601AD0F000498e8D74F9B3401CB01b66e6612",
+    "iceFolks": "0x14030f111BC17d53060EEA0DB3501F4FB6109579",
+    "staking": "0x8e84C99AB837C84aa684E6C95282abc0665e4a48",
+    "raffles": "0x80E5f85fA18EB9ee32Dbd6BD3C1c4420563b6d3b"
+  },
+  "testWallets": [
+    "0xd740Ea6BAe2f6BB859F418D4C90FabA33B6b19c9"
+  ]
+}

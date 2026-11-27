@@ -36,3 +36,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# contracts tooling
+/contracts/node_modules
+/contracts/out
+/contracts/.env
+/contracts/deployments/local.json
