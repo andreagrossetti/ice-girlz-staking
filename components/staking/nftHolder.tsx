@@ -10,6 +10,7 @@ import { NotStakedCard } from "../UI/items/notStakedCard";
 import { StakedCard } from "../UI/items/stakedCard";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
+import { STAKING_PAUSED } from "@/utils/maintenance";
 
 export const NFTHolder = ({ info }: { info: any }) => {
 
@@ -218,6 +219,12 @@ export const NFTHolder = ({ info }: { info: any }) => {
                 </div>
             </div>
 
+            {STAKING_PAUSED && (
+                <div className="mt-2 rounded-xl border-[1px] border-icePurp bg-icePurp/10 px-4 py-2 text-icePurp text-sm max-md:text-xs">
+                    <span className="font-bold">Staking is under maintenance.</span> We are upgrading the staking contract, so staking and claiming are paused for now. Your NFTs stay in your wallet and your $FROST keep accruing: you will be able to claim them as soon as the upgrade is live.
+                </div>
+            )}
+
             <div className="h-full">
 
                 <div className="h-full overflow-hidden">
@@ -226,7 +233,7 @@ export const NFTHolder = ({ info }: { info: any }) => {
                         :
                         <>
                             {selected == "Unstaked" ? <>
-                                {unstakedIds.length > 0 && <div className="mt-2 flex justify-end">
+                                {!STAKING_PAUSED && unstakedIds.length > 0 && <div className="mt-2 flex justify-end">
                                     <Button onClick={() => { handleStakeAll(info.index, unstakedIds) }} selected="" >Stake All</Button>
                                 </div>}
                                 {unstakedData.length > 0 ? (
@@ -244,14 +251,14 @@ export const NFTHolder = ({ info }: { info: any }) => {
                             </>
                                 :
                                 <>
-                                    {stakedIds.length > 0 && <div className="mt-2 flex justify-end">
+                                    {!STAKING_PAUSED && stakedIds.length > 0 && <div className="mt-2 flex justify-end">
                                         <Button onClick={() => { handleClaimAll(info.index, stakedIds) }} selected="" >Claim All</Button>
                                     </div>}
                                     {stakedData.length > 0 ? <div className="mt-2 mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 h-full overflow-y-scroll pt-4 md:pb-44 max-md:pb-60">
 
                                         {stakedData?.map((data: any, index: number) => (
                                             <>
-                                                <StakedCard handleClaim={() => { handleClaim(stakedIds[index], info.index) }} data={data} />
+                                                <StakedCard paused={STAKING_PAUSED} handleClaim={() => { handleClaim(stakedIds[index], info.index) }} data={data} />
                                             </>
                                         ))}
                                     </div> : <h2 className="text-icePurp/70 h-40 flex items-center justify-center">No staked NFTs</h2>}
